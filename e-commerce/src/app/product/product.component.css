@@ -1,0 +1,61 @@
+:host {
+  display: block;
+  overflow: hidden;
+  height: max-content;
+  border-radius: 1rem;
+  box-shadow: 0 0 0.75rem rgba(0, 0, 0, 0.3);
+  transition: transform 200ms ease-in-out;
+}
+:host:hover {
+  transform: scale(1.03);
+}
+.grid-view .card {
+  max-height: 600px;
+  min-height: 600px;
+}
+.grid-view img {
+  max-height: 250px;
+  max-width: 250px;
+
+  min-height: 250px;
+  min-width: 250px;
+  object-fit: scale-down;
+}
+
+.cart-item-view img {
+  max-height: 150px;
+  max-width: 150px;
+
+  min-height: 150px;
+  min-width: 150px;
+  object-fit: contain;
+}
+img {
+  cursor: pointer;
+  transition: transform 100ms ease-in;
+}
+img:hover {
+  transform: scale(1.05);
+}
+
+.grid-view .description,
+.grid-view .title {
+  height: 50px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-view .title {
+  height: 50px;
+  overflow: hidden;
+}
+.list-view .description {
+  height: 75px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cart-item-view .title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

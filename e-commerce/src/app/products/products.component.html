@@ -1,0 +1,73 @@
+<div class="my-container mx-auto">
+  <!-- Toolbar -->
+  <div class="border mb-5 p-3 d-flex justify-content-around">
+    <div class="btn-group" role="group">
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        [class.active]="view === 'grid'"
+        (click)="view = 'grid'"
+      >
+        Grid
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        [class.active]="view === 'list'"
+        (click)="view = 'list'"
+      >
+        List
+      </button>
+    </div>
+
+    <div class="w-50 d-flex">
+      <span class="me-5 d-flex align-items-center fs-5 fw-bold">Sort By</span>
+      <div class="btn-group" role="group">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          [class.active]="sortBy === 'default'"
+          (click)="sortBy = 'default'; sortByPrice(sortBy)"
+        >
+          Default
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          [class.active]="sortBy === 'htl'"
+          (click)="sortBy = 'htl'; sortByPrice(sortBy)"
+        >
+          Price(High to Low)
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          [class.active]="sortBy === 'lth'"
+          (click)="sortBy = 'lth'; sortByPrice(sortBy)"
+        >
+          Price(Low to High)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="border p-5">
+    <!-- grid view -->
+    <div class="grid-view" *ngIf="view === 'grid'">
+      <div class="row g-5">
+        <div class="col-3" *ngFor="let product of products">
+          <app-product [view]="'grid'" [product]="product"></app-product>
+        </div>
+      </div>
+    </div>
+
+    <!-- list view -->
+    <div class="list-view" *ngIf="view === 'list'">
+      <div class="row mb-5" *ngFor="let product of products">
+        <div class="col">
+          <app-product [view]="'list'" [product]="product"></app-product>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
