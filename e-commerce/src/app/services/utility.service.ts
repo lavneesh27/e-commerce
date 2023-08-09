@@ -1,4 +1,8 @@
-import { Injectable, createEnvironmentInjector } from '@angular/core';
+import {
+  Injectable,
+  OnDestroy,
+  createEnvironmentInjector,
+} from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Cart, Payment, Product, User } from '../models/models';
 import { Subject } from 'rxjs';
@@ -7,7 +11,7 @@ import { NavigationService } from './navigation.service';
 @Injectable({
   providedIn: 'root',
 })
-export class UtilityService {
+export class UtilityService implements OnDestroy {
   changeCart = new Subject();
 
   constructor(
@@ -18,6 +22,7 @@ export class UtilityService {
     let finalPrice: number = price - price * (discount / 100);
     return finalPrice;
   }
+
   getUser(): User {
     let token = this.jwt.decodeToken();
     let user: User = {
@@ -27,10 +32,11 @@ export class UtilityService {
       address: token.address,
       mobile: token.mobile,
       email: token.email,
-      password: '',
+      password: token.password,
       createdAt: token.createdAt,
       modifiedAt: token.modifiedAt,
     };
+
     return user;
   }
   setUser(token: string) {
@@ -71,7 +77,7 @@ export class UtilityService {
 
     for (let cartitem of cart.cartItems) {
       payment.totalAmount += cartitem.product.price;
-      
+
       payment.amountReduced +=
         cartitem.product.price -
         this.applyDiscount(
@@ -99,5 +105,8 @@ export class UtilityService {
       );
     }
     return pricepaid;
+  }
+  ngOnDestroy() {
+    this.changeCart.unsubscribe();
   }
 }

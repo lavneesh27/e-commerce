@@ -18,7 +18,9 @@
       <h6 class="card-subtitle my-2 text-primary">
         {{ product.quantity }} products are available.
       </h6>
-      <p class="card-text description">{{ product.description }}</p>
+      <p class="card-text description">
+        {{ product.description }}
+      </p>
     </div>
     <div class="card-body">
       <h5 class="card-title text-success">
@@ -26,7 +28,9 @@
           utilityService.applyDiscount(product.price, product.offer.discount)
             | currency : "INR"
         }}
-        <span class="text-primary"> -{{ product.offer.discount }}%</span>
+        <span class="text-primary fs-6">
+          -{{ product.offer.discount }}% off</span
+        >
       </h5>
       <h6 class="card-subtitle text-danger text-decoration-line-through">
         {{ product.price | currency : "INR" }}
@@ -50,7 +54,7 @@
   <div class="card">
     <div class="row g-0">
       <div
-        class="col-md-4 overflow-hidden d-flex justify-content-center align-items-center"
+        class="col-md-3 overflow-hidden d-flex justify-content-center align-items-center"
       >
         <img
           src="../../assets/images/{{ product.productCategory.subCategory }}/{{
@@ -62,12 +66,12 @@
           [productId]="product.id"
         />
       </div>
-      <div class="col d-flex flex-column">
-        <div class="card-header text-center">Header</div>
-
+      <div class="col d-flex flex-column mt-3">
         <div class="card-body">
           <h5 class="card-title title">{{ product.title }}</h5>
-          <p class="card-text description">{{ product.description }}</p>
+          <p class="card-text description">
+            {{ product.description }}
+          </p>
           <h6 class="card-subtitle mb-3 text-primary">
             {{ product.quantity }} products are available.
           </h6>
@@ -81,7 +85,9 @@
                 product.offer.discount
               ) | currency : "INR"
             }}
-            <span class="text-primary"> -{{ product.offer.discount }}%</span>
+            <span class="text-primary fs-5">
+              -{{ product.offer.discount }}% off</span
+            >
           </h2>
           <h5 class="card-subtitle text-danger text-decoration-line-through">
             {{ product.price | currency : "INR" }}

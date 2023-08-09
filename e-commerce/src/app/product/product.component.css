@@ -41,6 +41,7 @@ img:hover {
 .grid-view .description,
 .grid-view .title {
   height: 50px;
+  white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
 }

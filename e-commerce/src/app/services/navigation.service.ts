@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import {
-  Category,
-  Order,
-  Payment,
-  PaymentMethod,
-  User,
-} from '../models/models';
+import { Category, Order, Payment, User } from '../models/models';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -51,6 +45,11 @@ export class NavigationService {
     let url = this.baseUrl + 'RegisterUser';
     return this.http.post(url, user, { responseType: 'text' });
   }
+
+  updateUser(user: User) {
+    let url = this.baseUrl + 'UpdateUser';
+    return this.http.patch(url, user, { responseType: 'text' });
+  }
   loginUser(email: string, password: string) {
     let url = this.baseUrl + 'LoginUser';
     return this.http.post(
@@ -86,6 +85,11 @@ export class NavigationService {
     return this.http.post(url, null, { responseType: 'text' });
   }
 
+  emptyCart(userId: number) {
+    let url = this.baseUrl + 'EmptyCart/' + userId;
+    return this.http.post(url, null, { responseType: 'text' });
+  }
+
   getActiveCartOfUser(userid: number) {
     let url = this.baseUrl + 'GetActiveCartOfUser/' + userid;
     return this.http.get(url);
@@ -94,10 +98,7 @@ export class NavigationService {
     let url = this.baseUrl + 'GetAllPreviousCartsOfUser/' + userid;
     return this.http.get(url);
   }
-  getPaymentMethods() {
-    let url = this.baseUrl + 'GetPaymentMethods';
-    return this.http.get<PaymentMethod[]>(url);
-  }
+
   insertPayment(payment: Payment) {
     return this.http.post(this.baseUrl + 'InsertPayment', payment, {
       responseType: 'text',

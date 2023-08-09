@@ -1,6 +1,6 @@
 <div class="my-container mx-auto border border-dark">
   <!-- current cart -->
-  <div class="p-4 border my-rounded-corner">
+  <div *ngIf="usersCart.cartItems.length" class="p-4 border my-rounded-corner">
     <h3 class="w-25 border text-center py-2 my-rounded-corner">Current Cart</h3>
     <div class="mt-5">
       <div class="d-grid w-50 mx-auto mb-3">
@@ -8,6 +8,7 @@
           class="btn btn-outline-success fs-4"
           type="button"
           routerLink="/orders"
+          [disabled]="!usersCart.cartItems.length"
         >
           Order
         </button>
@@ -47,6 +48,13 @@
     </div>
     <div class="current-cart-items w-75 mx-auto mt-5">
       <h4>Cart Items</h4>
+      <button
+        *ngIf="usersCart.cartItems.length"
+        class="btn btn-danger mt-3"
+        (click)="EmptyCart()"
+      >
+        Empty Cart
+      </button>
       <div class="row mt-4 g-0">
         <div
           class="col-6 py-3 px-2"
@@ -60,27 +68,36 @@
       </div>
     </div>
   </div>
+  <div
+    *ngIf="usersCart.cartItems.length === 0"
+    class="my-rounded-corner mt-3 d-flex flex-column align-items-center fw-bold"
+  >
+    Your cart is empty! Add items to it now.
+    <button class="btn btn-success w-10 mt-4" routerLink="/home">
+      Shop Now
+    </button>
+  </div>
 
   <!-- previous carts -->
   <div class="mt-5 p-4 border my-rounded-corner">
     <h3 class="w-25 border text-center py-2 mb-5 my-rounded-corner">
       Previous Carts
     </h3>
+    <div *ngIf="usersPreviousCarts.length === 0" class="fw-bold text-center">
+      No carts to show
+    </div>
     <div class="card mb-5" *ngFor="let cart of usersPreviousCarts">
       <div
         class="card-header d-flex fw-bold justify-content-between align-items-center"
       >
         <span class="time"
-          >Ordered On:
-          <span class="fs-5">{{
-            cart.orderedOn | date : "dd-MMM-YYYY"
-          }}</span></span
+          >Ordered On: <span class="fs-6">{{ cart.orderedOn }}</span></span
         >
         <span class="count">Items: {{ cart.cartItems.length }}</span>
         <span class="price"
           >Price Paid :
-          <span class="fs-5">{{
-            utilityService.calculatePricePaid(cart)
+          <span class="fs-5 text-success">{{
+            utilityService.calculatePricePaid(cart) | currency : "INR"
           }}</span></span
         >
       </div>

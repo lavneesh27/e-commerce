@@ -19,13 +19,7 @@ export class CartComponent implements OnInit {
   usersPaymentInfo: Payment = {
     id: 0,
     user: this.utilityService.getUser(),
-    paymentMethod: {
-      id: 0,
-      type: '',
-      provider: '',
-      available: false,
-      reason: '',
-    },
+
     totalAmount: 0,
     shippingCharges: 0,
     amountReduced: 0,
@@ -54,6 +48,18 @@ export class CartComponent implements OnInit {
       .getAllPreviousCarts(this.utilityService.getUser().id)
       .subscribe((res: any) => {
         this.usersPreviousCarts = res;
+      });
+  }
+
+  EmptyCart(): void {
+    this.navigationService
+      .emptyCart(this.utilityService.getUser().id)
+      .subscribe((res: any) => {
+        this.utilityService.changeCart.next(0);
+        window.location.reload();
+        this.navigationService.getActiveCartOfUser(
+          this.utilityService.getUser().id
+        );
       });
   }
 }

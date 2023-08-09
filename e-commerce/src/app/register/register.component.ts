@@ -22,36 +22,40 @@ export class RegisterComponent {
   ) {}
 
   ngOnInit() {
-    this.registerForm = this.fb.group({
-      firstName: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.pattern('[a-zA-Z].*'),
+    this.registerForm = this.fb.group(
+      {
+        firstName: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.pattern('[a-zA-Z].*'),
+          ],
         ],
-      ],
-      lastName: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.pattern('[a-zA-Z].*'),
+        lastName: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.pattern('[a-zA-Z].*'),
+          ],
         ],
-      ],
-      email: ['', [Validators.required, Validators.email]],
-      address: ['', [Validators.required]],
-      mobile: ['', Validators.required],
-      pwd: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(6),
-          Validators.maxLength(15),
+        email: ['', [Validators.required, Validators.email]],
+        address: ['', [Validators.required]],
+        mobile: ['', [Validators.required, Validators.minLength(10)]],
+        pwd: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$'),
+          ],
         ],
-      ],
-      rpwd: [''],
-    });
+        rpwd: ['', Validators.required],
+      },
+      {
+        validators: this.passwordMatchValidator,
+      }
+    );
   }
   register() {
     let user: User = {
@@ -68,6 +72,16 @@ export class RegisterComponent {
     this.navigationService.registerUser(user).subscribe((res: any) => {
       this.message = res.toString();
     });
+  }
+  passwordMatchValidator(formGroup: FormGroup) {
+    const passwordControl = formGroup.get('pwd');
+    const repeatPasswordControl = formGroup.get('rpwd');
+
+    if (passwordControl?.value !== repeatPasswordControl?.value) {
+      repeatPasswordControl?.setErrors({ passwordMismatch: true });
+    } else {
+      repeatPasswordControl?.setErrors(null);
+    }
   }
   get FirstName(): FormControl {
     return this.registerForm.get('firstName') as FormControl;

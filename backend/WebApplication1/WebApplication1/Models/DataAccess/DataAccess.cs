@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -149,35 +150,6 @@ namespace WebApplication1.Controllers.DataAccess
             return offer;
         }
 
-        public List<PaymentMethod> GetPaymentMethods()
-        {
-            var result = new List<PaymentMethod>();
-            using SqlConnection conn = new(dbconnection);
-            SqlCommand command = new()
-            {
-                Connection = conn,
-            };
-            string query = "select * from PaymentMethods;";
-            command.CommandText = query;
-
-            conn.Open();
-
-            SqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                PaymentMethod paymentMethod = new()
-                {
-                    Id = (int)reader["PaymentMethodId"],
-                    Type = (string)reader["Type"],
-                    Provider = (string)reader["Provider"],
-                    Available = bool.Parse((string)reader["Available"]),
-                    Reason = (string)reader["Reason"]
-                };
-                result.Add(paymentMethod);
-            }
-            return result;
-        }
-
         public Product GetProduct(int id)
         {
             var product = new Product();
@@ -297,15 +269,13 @@ namespace WebApplication1.Controllers.DataAccess
         {
             var products = new List<Product>();
             using SqlConnection connection = new(dbconnection);
-            SqlCommand cmd = new()
-            {
-                Connection = connection,
-            };
-            string query = "SELECT TOP " + count + " * FROM Products WHERE CategoryId = (SELECT CategoryId FROM ProductCategories WHERE Category = @c AND SubCategory = @s) ORDER BY NEWID();";
 
-            cmd.CommandText = query;
-            cmd.Parameters.Add("@c", System.Data.SqlDbType.NVarChar).Value = category;
-            cmd.Parameters.Add("@s", System.Data.SqlDbType.NVarChar).Value = subcategory;
+            SqlCommand cmd = new SqlCommand("GetProducts", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@category", SqlDbType.NVarChar).Value = category;
+            cmd.Parameters.Add("@subcategory", SqlDbType.NVarChar).Value = subcategory;
+            cmd.Parameters.Add("@count", SqlDbType.Int).Value = count;
 
             connection.Open();
             SqlDataReader reader = cmd.ExecuteReader();
@@ -320,8 +290,8 @@ namespace WebApplication1.Controllers.DataAccess
                     Quantity = (int)reader["Quantity"],
                     ImageName = (string)reader["ImageName"],
                 };
-                var categoryid = (int)reader["CategoryId"];
-                product.ProductCategory = GetProductCategory(categoryid);
+                var categoryId = (int)reader["CategoryId"];
+                product.ProductCategory = GetProductCategory(categoryId);
 
                 var offerId = (int)reader["OfferId"];
                 product.Offer = GetOffer(offerId);
@@ -362,31 +332,19 @@ namespace WebApplication1.Controllers.DataAccess
 
         public bool InsertCartItem(int userId, int productId)
         {
-            using SqlConnection connection = new(dbconnection);
-            SqlCommand cmd = new()
-            {
-                Connection = connection,
-            };
-            connection.Open();
+            using SqlConnection conn = new(dbconnection);
+            conn.Open();
+            SqlCommand cmd = new SqlCommand("InsertCartItem", conn);
+
+            cmd.CommandType = CommandType.StoredProcedure;
             string query = "select count(*) from Carts where UserId=" + userId + "and Ordered='false';";
-            cmd.CommandText = query;
-            int count = (int)cmd.ExecuteScalar();
-            if (count == 0)
-            {
-                query = "insert into Carts (UserId, Ordered, OrderedOn) values (" + userId + ",'false','')";
-                cmd.CommandText = query;
-                cmd.ExecuteNonQuery();
+            cmd.Parameters.Add("@userId", SqlDbType.Int).Value = userId;
+            cmd.Parameters.Add("@productId", SqlDbType.Int).Value = productId;
 
-            }
-            query = "select CartId from Carts where UserId=" + userId + " and Ordered='false';";
-            cmd.CommandText = query;
-            int cartId = (int)cmd.ExecuteScalar();
-
-            query = "insert into CartItems(CartId, ProductId) values(" + cartId + ", " + productId + ");";
-            cmd.CommandText = query;
-            cmd.ExecuteNonQuery();
+            cmd.ExecuteScalar();
             return true;
         }
+
 
         public bool RemoveCartItem(int userId, int productId)
         {
@@ -403,7 +361,31 @@ namespace WebApplication1.Controllers.DataAccess
 
                     if (cartId != 0)
                     {
-                        query = "DELETE FROM CartItems WHERE CartId = " + cartId + " AND ProductId = " + productId + ";";
+                        query = "DELETE TOP(1) FROM CartItems WHERE CartId = " + cartId + " AND ProductId = " + productId + ";";
+                        cmd.CommandText = query;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            return true;
+        }
+        public bool EmptyCart(int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(dbconnection))
+            {
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.Connection = connection;
+                    connection.Open();
+
+                    string query = "SELECT CartId FROM Carts WHERE UserId = " + userId + " AND Ordered = 'false';";
+                    cmd.CommandText = query;
+                    int cartId = (int)cmd.ExecuteScalar();
+
+                    if (cartId != 0)
+                    {
+                        query = "DELETE FROM CartItems WHERE CartId = " + cartId + ";";
                         cmd.CommandText = query;
                         cmd.ExecuteNonQuery();
                     }
@@ -417,34 +399,22 @@ namespace WebApplication1.Controllers.DataAccess
         public int InsertOrder(Order order)
         {
             int value = 0;
-            using SqlConnection connection = new(dbconnection);
-            SqlCommand cmd = new()
-            {
-                Connection = connection,
-            };
-            string query = "insert into Orders(UserId, CartId, PaymentId, CreatedAt) values (@uid, @cid, @pid, @cat);";
-            cmd.CommandText = query;
-            cmd.Parameters.Add("uid", System.Data.SqlDbType.Int).Value = order.User.Id;
-            cmd.Parameters.Add("cid", System.Data.SqlDbType.Int).Value = order.Cart.Id;
-            cmd.Parameters.Add("cat", System.Data.SqlDbType.NVarChar).Value = order.CreatedAt;
-            cmd.Parameters.Add("pid", System.Data.SqlDbType.Int).Value = order.Payment.Id;
 
-            connection.Open();
-            value = cmd.ExecuteNonQuery();
-
-            if (value > 0)
+            using (SqlConnection connection = new SqlConnection(dbconnection))
             {
-                query = "update Carts set Ordered='true', OrderedOn='" + DateTime.Now.ToString(dateformat) + "' where CartId=" + order.Cart.Id + ";";
-                cmd.CommandText = query;
-                cmd.ExecuteNonQuery();
+                connection.Open();
 
-                query = "select top 1 Id from Orders order by Id desc;";
-                cmd.CommandText = query;
-                value = (int)cmd.ExecuteScalar();
-            }
-            else
-            {
-                value = 0;
+                using (SqlCommand cmd = new SqlCommand("InsertOrderProcedure", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@userId", SqlDbType.Int).Value = order.User.Id;
+                    cmd.Parameters.Add("@cartId", SqlDbType.Int).Value = order.Cart.Id;
+                    cmd.Parameters.Add("@paymentId", SqlDbType.Int).Value = order.Payment.Id;
+                    cmd.Parameters.Add("@createdAt", SqlDbType.NVarChar).Value = order.CreatedAt;
+
+                    value = (int)cmd.ExecuteScalar();
+                }
             }
 
             return value;
@@ -453,34 +423,24 @@ namespace WebApplication1.Controllers.DataAccess
         public int InsertPayment(Payment payment)
         {
             int value = 0;
-            using SqlConnection connection = new(dbconnection);
-            SqlCommand cmd = new()
-            {
-                Connection = connection,
-            };
-            string query = @"insert into Payments(PaymentMethodId, UserId, TotalAmount, ShippingCharges, AmountReduced, AmountPaid, CreatedAt) values (@pmid, @uid, @ta, @sc, @ar, @ap, @cat);";
 
-            cmd.CommandText = query;
-            cmd.Parameters.Add("@pmid", System.Data.SqlDbType.Int).Value = payment.PaymentMethod.Id;
-            cmd.Parameters.Add("@uid", System.Data.SqlDbType.Int).Value = payment.User.Id;
-            cmd.Parameters.Add("@ta", System.Data.SqlDbType.NVarChar).Value = payment.TotalAmount;
-            cmd.Parameters.Add("@sc", System.Data.SqlDbType.NVarChar).Value = payment.ShippingCharges;
-            cmd.Parameters.Add("@ar", System.Data.SqlDbType.NVarChar).Value = payment.AmountReduced;
-            cmd.Parameters.Add("@ap", System.Data.SqlDbType.NVarChar).Value = payment.AmountPaid;
-            cmd.Parameters.Add("@cat", System.Data.SqlDbType.NVarChar).Value = payment.CreatedAt;
-
-            connection.Open();
-            value = cmd.ExecuteNonQuery();
-
-            if (value > 0)
+            using (SqlConnection connection = new SqlConnection(dbconnection))
             {
-                query = "select top 1 Id from Payments order by Id desc;";
-                cmd.CommandText = query;
-                value = (int)cmd.ExecuteScalar();
-            }
-            else
-            {
-                value = 0;
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand("InsertPaymentProcedure", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@userId", SqlDbType.Int).Value = payment.User.Id;
+                    cmd.Parameters.Add("@totalAmount", SqlDbType.Decimal).Value = payment.TotalAmount;
+                    cmd.Parameters.Add("@shippingCharges", SqlDbType.Decimal).Value = payment.ShippingCharges;
+                    cmd.Parameters.Add("@amountReduced", SqlDbType.Decimal).Value = payment.AmountReduced;
+                    cmd.Parameters.Add("@amountPaid", SqlDbType.Decimal).Value = payment.AmountPaid;
+                    cmd.Parameters.Add("@createdAt", SqlDbType.NVarChar).Value = payment.CreatedAt;
+
+                    value = (int)cmd.ExecuteScalar();
+                }
             }
             return value;
         }
@@ -508,36 +468,47 @@ namespace WebApplication1.Controllers.DataAccess
         public bool InsertUser(User user)
         {
             using SqlConnection conn = new(dbconnection);
-            SqlCommand cmd = new()
-            {
-                Connection = conn,
-            };
             conn.Open();
+            SqlCommand cmd = new SqlCommand("InsertUserProcedure", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
 
-            string query = "select count(*) from Users where Email='" + user.Email + "';";
 
-            cmd.CommandText = query;
-            int count = (int)cmd.ExecuteScalar();
-            if (count > 0)
-            {
-                conn.Close();
-                return false;
-            }
-            query = "insert into Users (FirstName, LastName, Address, Mobile, Email, Password, CreatedAt, ModifiedAt) values (@fn, @ln, @add, @mb, @em, @pwd, @cat,@mat);";
+            cmd.Parameters.Add("@firstName", SqlDbType.NVarChar).Value = user.FirstName;
+            cmd.Parameters.Add("@lastName", SqlDbType.NVarChar).Value = user.LastName;
+            cmd.Parameters.Add("@address", SqlDbType.NVarChar).Value = user.Address;
+            cmd.Parameters.Add("@mobile", SqlDbType.NVarChar).Value = user.Mobile;
+            cmd.Parameters.Add("@email", SqlDbType.NVarChar).Value = user.Email;
+            cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = user.Password;
+            cmd.Parameters.Add("@createdAt", SqlDbType.NVarChar).Value = user.CreatedAt;
+            cmd.Parameters.Add("@modifiedAt", SqlDbType.NVarChar).Value = user.ModifiedAt;
 
-            cmd.CommandText = query;
-            cmd.Parameters.Add("@fn", System.Data.SqlDbType.NVarChar).Value = user.FirstName;
-            cmd.Parameters.Add("@ln", System.Data.SqlDbType.NVarChar).Value = user.LastName;
-            cmd.Parameters.Add("@add", System.Data.SqlDbType.NVarChar).Value = user.Address;
-            cmd.Parameters.Add("@mb", System.Data.SqlDbType.NVarChar).Value = user.Mobile;
-            cmd.Parameters.Add("@em", System.Data.SqlDbType.NVarChar).Value = user.Email;
-            cmd.Parameters.Add("@pwd", System.Data.SqlDbType.NVarChar).Value = user.Password;
-            cmd.Parameters.Add("@cat", System.Data.SqlDbType.NVarChar).Value = user.CreatedAt;
-            cmd.Parameters.Add("@mat", System.Data.SqlDbType.NVarChar).Value = user.ModifiedAt;
 
-            cmd.ExecuteNonQuery();
+
+            cmd.ExecuteScalar();
             return true;
         }
+
+        public bool UpdateUser(User user)
+        {
+            using SqlConnection conn = new(dbconnection);
+            conn.Open();
+            SqlCommand cmd = new SqlCommand("UpdateUserProcedure", conn);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@firstName", SqlDbType.NVarChar).Value = user.FirstName;
+            cmd.Parameters.Add("@lastName", SqlDbType.NVarChar).Value = user.LastName;
+            cmd.Parameters.Add("@address", SqlDbType.NVarChar).Value = user.Address;
+            cmd.Parameters.Add("@mobile", SqlDbType.NVarChar).Value = user.Mobile;
+            cmd.Parameters.Add("@email", SqlDbType.NVarChar).Value = user.Email;
+            cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = user.Password;
+            cmd.Parameters.Add("@modifiedAt", SqlDbType.NVarChar).Value = user.ModifiedAt;
+
+            cmd.ExecuteScalar();
+
+            return true;
+        }
+
 
         public string IsUserPresent(string email, string password)
         {

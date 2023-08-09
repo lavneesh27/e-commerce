@@ -41,7 +41,6 @@ export class LoginComponent {
         if (res.toString() !== 'invalid') {
           this.message = 'Logged In Successfully.';
           this.utilityService.setUser(res.toString());
-          console.log(this.utilityService.getUser());
         } else {
           this.message = 'Invalid Credentials!';
         }

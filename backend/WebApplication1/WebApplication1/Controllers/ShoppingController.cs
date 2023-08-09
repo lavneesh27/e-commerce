@@ -52,6 +52,21 @@ namespace WebApplication1.Controllers
             return Ok(message);
         }
 
+        [HttpPatch("UpdateUser")]
+        public IActionResult UpdateUser([FromBody] User user)
+        {
+            user.ModifiedAt = DateTime.Now.ToString(DateFormat);
+
+            var result = dataAccess.UpdateUser(user);
+
+            string? message;
+            if (result) message = "updated";
+            else message = "user not found";
+
+            return Ok(message);
+        }
+
+
         [HttpPost("LoginUser")]
         public IActionResult LoginUser([FromBody] User user)
         {
@@ -89,6 +104,12 @@ namespace WebApplication1.Controllers
             return Ok(result ? "removed" : "not removed");
         }
 
+        [HttpPost("EmptyCart/{userid}")]
+        public IActionResult EmptyCart(int userid)
+        {
+            var result = dataAccess.EmptyCart(userid);
+            return Ok(result ? "Cart emptied" : "Cart could not be emptied");
+        }
 
         [HttpGet("GetActiveCartOfUser/{id}")]
         public IActionResult GetActiveCartOfUser(int id)
@@ -103,12 +124,7 @@ namespace WebApplication1.Controllers
             var result = dataAccess.GetAllPreviousCartsOfUser(id);
             return Ok(result);
         }
-        [HttpGet("GetPaymentMethods")]
-        public IActionResult GetPaymentMethods()
-        {
-            var result = dataAccess.GetPaymentMethods();
-            return Ok(result);
-        }
+
 
         [HttpPost("InsertPayment")]
         public IActionResult InsertPayment(Payment payment)

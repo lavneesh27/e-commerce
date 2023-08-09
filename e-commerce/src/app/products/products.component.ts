@@ -13,6 +13,7 @@ export class ProductsComponent implements OnInit {
   view: 'grid' | 'list' = 'grid';
   sortBy: 'default' | 'htl' | 'lth' = 'default';
   products: Product[] = [];
+  searchTerm: string = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -30,7 +31,9 @@ export class ProductsComponent implements OnInit {
           .getProducts(category, subCategory, 10)
           .subscribe((res: any) => {
             this.products = res;
-            // console.log(res);
+            this.view = 'grid';
+            this.sortBy = 'default';
+            this.searchTerm = '';
           });
       }
     });
@@ -49,6 +52,28 @@ export class ProductsComponent implements OnInit {
           ? -1
           : 1)
       );
+    });
+  }
+  find() {
+    this.activatedRoute.queryParams.subscribe((params: any) => {
+      let category = params.category;
+      let subCategory = params.subcategory;
+
+      if (category && subCategory) {
+        this.navigationService
+          .getProducts(category, subCategory, 10)
+          .subscribe((res: any) => {
+            this.products = res.filter((product: any) => {
+              const searchField = [product.title];
+
+              const searchText = this.searchTerm.toLowerCase();
+
+              return searchField.some((field) =>
+                field.toLowerCase().includes(searchText)
+              );
+            });
+          });
+      }
     });
   }
 }

@@ -63,17 +63,9 @@ export interface Cart {
   orderedOn: string;
 }
 
-export interface PaymentMethod {
-  id: number;
-  type: string;
-  provider: string;
-  available: boolean;
-  reason: string;
-}
 export interface Payment {
   id: number;
   user: User;
-  paymentMethod: PaymentMethod;
   totalAmount: number;
   shippingCharges: number;
   amountReduced: number;

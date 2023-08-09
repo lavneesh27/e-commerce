@@ -8,6 +8,7 @@ import { OrderComponent } from './order/order.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ProductsComponent } from './products/products.component';
 import { AccountComponent } from './account/account.component';
+import { EditAccountComponent } from './edit-account/edit-account.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: 'orders', component: OrderComponent },
   { path: 'account', component: AccountComponent },
+  { path: 'edit-account', component: EditAccountComponent },
   { path: '**', component: PageNotFoundComponent },
 ];
 

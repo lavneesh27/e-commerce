@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { UtilityService } from '../services/utility.service';
 import { NavigationService } from '../services/navigation.service';
-import { Cart, Order, Payment, PaymentMethod } from '../models/models';
+import { Cart, Order, Payment } from '../models/models';
 import { timer } from 'rxjs';
 import { Router } from '@angular/router';
+
+declare var Razorpay: any;
 
 @Component({
   selector: 'app-order',
@@ -14,7 +16,6 @@ import { Router } from '@angular/router';
 export class OrderComponent implements OnInit {
   selectedPaymentMethodName = '';
   selectedPaymentMethod = new FormControl('0');
-  paymentMethods: PaymentMethod[] = [];
   address = '';
   mobileNumber = '';
   displaySpinner = false;
@@ -31,13 +32,6 @@ export class OrderComponent implements OnInit {
   usersPaymentInfo: Payment = {
     id: 0,
     user: this.utilityService.getUser(),
-    paymentMethod: {
-      id: 0,
-      type: '',
-      provider: '',
-      available: false,
-      reason: '',
-    },
     totalAmount: 0,
     shippingCharges: 0,
     amountReduced: 0,
@@ -50,10 +44,6 @@ export class OrderComponent implements OnInit {
     private router: Router
   ) {}
   ngOnInit(): void {
-    this.navigationService.getPaymentMethods().subscribe((res) => {
-      this.paymentMethods = res;
-    });
-
     this.selectedPaymentMethod.valueChanges.subscribe((res: any) => {
       if (res === '0') this.selectedPaymentMethodName = '';
       else {
@@ -71,43 +61,55 @@ export class OrderComponent implements OnInit {
     this.address = this.utilityService.getUser().address;
     this.mobileNumber = this.utilityService.getUser().mobile;
   }
-  getPaymentMethod(id: string) {
-    let x = this.paymentMethods.find((v) => v.id === parseInt(id));
-    return x?.type + '-' + x?.provider;
-  }
   placeOrder() {
-    this.displaySpinner = true;
-    let isPaymentSuccessfull = this.payMoney();
-    if (!isPaymentSuccessfull) {
-      this.displaySpinner = false;
-      this.message = 'Something went wrong! Payment did not happen!';
-      this.className = 'text-danger';
-      return;
-    }
-    let step = 0;
-    let count = timer(0, 3000).subscribe((res) => {
-      ++step;
-      if (step === 1) {
-        this.message = 'Processing Payment';
-        this.className = 'text-success';
-      }
-      if (step === 2) {
-        this.message = 'Payment Successfull, Order is being placed.';
-        this.storeOrder();
-      }
-      if (step === 3) {
-        this.message = 'Your Order has been placed';
-        this.displaySpinner = false;
-      }
-      if (step === 4) {
+    const RazorpayOptions = {
+      description: 'Sample Razorpay demo',
+      currency: 'INR',
+      amount: this.usersPaymentInfo.amountPaid * 100,
+      name:
+        this.utilityService.getUser().firstName +
+        ' ' +
+        this.utilityService.getUser().lastName,
+      key: 'rzp_test_PpV8ZNgcL7WlXH',
+      image:
+        'https://www.ecommerce-nation.com/wp-content/uploads/2019/02/razorpay.webp',
+      prefill: {
+        name:
+          this.utilityService.getUser().firstName +
+          this.utilityService.getUser().lastName,
+        email: this.utilityService.getUser().email,
+        phone: this.utilityService.getUser().mobile,
+      },
+      handler: (res: any) => {
+        successCallback(res.razorpay_payment_id);
+      },
+      theme: {
+        color: '#6466e3',
+      },
+      modal: {
+        ondismiss: () => {
+          console.log('dismissed');
+        },
+      },
+    };
+
+    const successCallback = (paymentid: any) => {
+      console.log(paymentid);
+      this.message = 'Your Order has been placed';
+      this.storeOrder();
+      setTimeout(() => {
         this.router.navigateByUrl('/home');
-        count.unsubscribe();
-      }
-    });
+      }, 1000);
+    };
+
+    const failureCallback = (e: any) => {
+      console.log(e);
+      console.log('error occured');
+    };
+
+    Razorpay.open(RazorpayOptions, successCallback, failureCallback);
   }
-  payMoney() {
-    return true;
-  }
+
   storeOrder() {
     let payment: Payment;
     let pmid = 0;
@@ -116,13 +118,6 @@ export class OrderComponent implements OnInit {
 
     payment = {
       id: 0,
-      paymentMethod: {
-        id: pmid,
-        type: '',
-        provider: '',
-        available: false,
-        reason: '',
-      },
       user: this.utilityService.getUser(),
       totalAmount: this.usersPaymentInfo.totalAmount,
       shippingCharges: this.usersPaymentInfo.shippingCharges,

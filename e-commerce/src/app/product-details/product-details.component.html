@@ -14,41 +14,15 @@
       <div
         class="image-thumbnails mt-4 d-flex justify-content-between align-items-center"
       >
-        <img
-          src="../../assets/images/{{ product.productCategory.subCategory }}/{{
-            product.id
-          }}/1.jpg"
-          alt="Thumbnail Image"
-          (click)="imageIndex = 1"
-        />
-        <img
-          src="../../assets/images/{{ product.productCategory.subCategory }}/{{
-            product.id
-          }}/2.jpg"
-          alt="Thumbnail Image"
-          (click)="imageIndex = 2"
-        />
-        <img
-          src="../../assets/images/{{ product.productCategory.subCategory }}/{{
-            product.id
-          }}/3.jpg"
-          alt="Thumbnail Image"
-          (click)="imageIndex = 3"
-        />
-        <img
-          src="../../assets/images/{{ product.productCategory.subCategory }}/{{
-            product.id
-          }}/4.jpg"
-          alt="Thumbnail Image"
-          (click)="imageIndex = 4"
-        />
-        <img
-          src="../../assets/images/{{ product.productCategory.subCategory }}/{{
-            product.id
-          }}/5.jpg"
-          alt="Thumbnail Image"
-          (click)="imageIndex = 5"
-        />
+        <ng-container *ngFor="let imageNumber of [1, 2, 3, 4, 5]">
+          <img
+            src="../../assets/images/{{
+              product.productCategory.subCategory
+            }}/{{ product.id }}/{{ imageNumber }}.jpg"
+            alt="Thumbnail Image"
+            (click)="imageIndex = imageNumber"
+          />
+        </ng-container>
       </div>
     </div>
     <!-- Details of the product -->
@@ -63,12 +37,12 @@
               utilityService.applyDiscount(
                 product.price,
                 product.offer.discount
-              )
+              ) | currency : "INR"
             }}
             <span class="text-primary"> -{{ product.offer.discount }}%</span>
           </h1>
           <h4 class="card-subtitle text-danger text-decoration-line-through">
-            {{ product.price }}
+            {{ product.price | currency : "INR" }}
           </h4>
         </div>
         <div class="card-body">
@@ -121,7 +95,14 @@
     <div class="col p-3">
       <h3>Give Your Review</h3>
       <h5>Write Your Review</h5>
-      <textarea class="w-75 p-2" [formControl]="reviewControl"></textarea>
+      <div class="form-floating">
+        <textarea
+          class="form-control w-75 p-2"
+          style="height: 100px; resize: none"
+          id="floatingTextarea"
+          [formControl]="reviewControl"
+        ></textarea>
+      </div>
       <div class="d-flex align-items-start">
         <button
           class="btn btn-outline-secondary mt-4 me-5"
@@ -136,7 +117,9 @@
           Login first, then enter the review.
         </h6>
         <h6 class="text-danger" *ngIf="showError">Review Cannot Be Empty!</h6>
-        <h6 class="text-success">Review Saved Successfully!</h6>
+        <h6 class="text-success" *ngIf="reviewSaved">
+          Review Saved Successfully!
+        </h6>
       </div>
     </div>
     <!-- other review -->

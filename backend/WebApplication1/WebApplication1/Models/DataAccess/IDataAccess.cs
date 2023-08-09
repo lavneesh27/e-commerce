@@ -1,4 +1,6 @@
-﻿using WebApplication1.Models;
+﻿
+
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers.DataAccess
 {
@@ -16,6 +18,8 @@ namespace WebApplication1.Controllers.DataAccess
 
         bool InsertUser(User user);
 
+        bool UpdateUser(User user);
+
         string IsUserPresent(string email, string password);
 
         void InsertReview(Review review);
@@ -28,13 +32,14 @@ namespace WebApplication1.Controllers.DataAccess
 
         bool RemoveCartItem(int userId, int productId);
 
+        bool EmptyCart(int userId);
+
         Cart GetActiveCartOfUser(int userId);
 
         Cart GetCart(int cartid);
 
         List<Cart> GetAllPreviousCartsOfUser(int userid);
 
-        List<PaymentMethod> GetPaymentMethods();
 
         int InsertPayment(Payment payment);
 
