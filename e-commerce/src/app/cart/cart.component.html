@@ -1,52 +1,12 @@
-<div class="my-container mx-auto border border-dark">
+<div class="my-container text-center">
+  <div *ngIf="!usersCart.cartItems.length" class="text-center fw-bold">
+    Cart Empty! Please add some items
+  </div>
   <!-- current cart -->
   <div *ngIf="usersCart.cartItems.length" class="p-4 border my-rounded-corner">
     <h3 class="w-25 border text-center py-2 my-rounded-corner">Current Cart</h3>
-    <div class="mt-5">
-      <div class="d-grid w-50 mx-auto mb-3">
-        <button
-          class="btn btn-outline-success fs-4"
-          type="button"
-          routerLink="/orders"
-          [disabled]="!usersCart.cartItems.length"
-        >
-          Order
-        </button>
-      </div>
-      <table class="table w-50 mx-auto table-bordered table-hover my-shadow">
-        <tbody>
-          <tr>
-            <td>Total Items</td>
-            <td class="fs-5 fw-bold">{{ usersCart.cartItems.length }}</td>
-          </tr>
-          <tr>
-            <td>Total Price</td>
-            <td class="fs-5 fw-bold text-danger">
-              {{ usersPaymentInfo.totalAmount | currency : "INR" }}
-            </td>
-          </tr>
-          <tr>
-            <td>Shipping Charges</td>
-            <td class="fs-5 fw-bold text-danger">
-              {{ usersPaymentInfo.shippingCharges | currency : "INR" }}
-            </td>
-          </tr>
-          <tr>
-            <td>Discount</td>
-            <td class="fs-5 fw-bold text-success">
-              {{ usersPaymentInfo.amountReduced | currency : "INR" }}
-            </td>
-          </tr>
-          <tr>
-            <td>You Have to Pay</td>
-            <td class="fs-5 fw-bold text-success">
-              {{ usersPaymentInfo.amountPaid | currency : "INR" }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="current-cart-items w-75 mx-auto mt-5">
+
+    <div class="current-cart-items w-75 mx-auto mt-3">
       <h4>Cart Items</h4>
       <button
         *ngIf="usersCart.cartItems.length"
@@ -67,15 +27,53 @@
         </div>
       </div>
     </div>
-  </div>
-  <div
-    *ngIf="usersCart.cartItems.length === 0"
-    class="my-rounded-corner mt-3 d-flex flex-column align-items-center fw-bold"
-  >
-    Your cart is empty! Add items to it now.
-    <button class="btn btn-success w-10 mt-4" routerLink="/home">
-      Shop Now
-    </button>
+
+    <hr class="" />
+    <h4>Summary</h4>
+    <div class="mt-5">
+      <table class="table w-50 mx-auto table-bordered table-hover my-shadow">
+        <tbody>
+          <tr>
+            <td>Total Items</td>
+            <td class="fs-5 fw-bold">{{ usersCart.cartItems.length }}</td>
+          </tr>
+          <tr>
+            <td>Total Price</td>
+            <td class="fs-5 fw-bold text-danger">
+              {{ usersPaymentInfo.totalAmount | currency : "INR" }}
+            </td>
+          </tr>
+          <tr>
+            <td>Shipping Charges</td>
+            <td class="fs-5 fw-bold text-danger">
+              + {{ usersPaymentInfo.shippingCharges | currency : "INR" }}
+            </td>
+          </tr>
+          <tr>
+            <td>Discount</td>
+            <td class="fs-5 fw-bold text-success">
+              - {{ usersPaymentInfo.amountReduced | currency : "INR" }}
+            </td>
+          </tr>
+          <tr>
+            <td>You Have to Pay</td>
+            <td class="fs-5 fw-bold text-success">
+              {{ usersPaymentInfo.amountPaid | currency : "INR" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="d-grid w-50 mx-auto mb-3">
+        <button
+          class="btn btn-outline-success fs-4"
+          type="button"
+          routerLink="/orders"
+          [disabled]="!usersCart.cartItems.length"
+        >
+          Proceed to Buy
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- previous carts -->

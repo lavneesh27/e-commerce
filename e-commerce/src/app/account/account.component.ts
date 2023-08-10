@@ -11,6 +11,7 @@ export class AccountComponent implements OnInit {
   constructor(public utility: UtilityService) {}
   ngOnInit() {
     this.user = this.utility.getUser();
+    // console.log(this.user);
   }
 
   user: User = {

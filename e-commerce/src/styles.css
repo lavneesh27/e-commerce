@@ -1,11 +1,11 @@
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 .my-container {
   max-width: 1500px;
 }
 .my-shadow {
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 }
 .my-rounded-corner {
   border-radius: 1rem;

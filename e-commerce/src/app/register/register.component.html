@@ -7,7 +7,18 @@
         class="form-control"
         id="firstName"
         formControlName="firstName"
+        [ngClass]="
+          submitted && registerForm.get('firstName')!.invalid
+            ? 'is-invalid'
+            : ''
+        "
       />
+      <div
+        class="invalid-feedback"
+        *ngIf="submitted && registerForm.get('firstName')!.invalid"
+      >
+        First Name should not be empty
+      </div>
     </div>
     <div class="col">
       <label for="exampleInputEmail1" class="form-label">Last Name</label>
@@ -16,7 +27,16 @@
         class="form-control"
         id="lastName"
         formControlName="lastName"
+        [ngClass]="
+          submitted && registerForm.get('lastName')!.invalid ? 'is-invalid' : ''
+        "
       />
+      <div
+        class="invalid-feedback"
+        *ngIf="submitted && registerForm.get('lastName')!.invalid"
+      >
+        Last Name should not be empty
+      </div>
     </div>
   </div>
   <div class="mb-3">
@@ -27,7 +47,16 @@
       id="email"
       aria-describedby="emailHelp"
       formControlName="email"
+      [ngClass]="
+        submitted && registerForm.get('email')!.invalid ? 'is-invalid' : ''
+      "
     />
+    <div
+      class="invalid-feedback"
+      *ngIf="submitted && registerForm.get('email')!.invalid"
+    >
+      Please enter a valid email address.
+    </div>
   </div>
   <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Address</label>
@@ -36,7 +65,16 @@
       class="form-control"
       id="address"
       formControlName="address"
+      [ngClass]="
+        submitted && registerForm.get('address')!.invalid ? 'is-invalid' : ''
+      "
     />
+    <div
+      class="invalid-feedback"
+      *ngIf="submitted && registerForm.get('address')!.invalid"
+    >
+      Address should not be empty
+    </div>
   </div>
   <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Mobile</label>
@@ -47,7 +85,16 @@
       aria-describedby="emailHelp"
       maxlength="10"
       formControlName="mobile"
+      [ngClass]="
+        submitted && registerForm.get('mobile')!.invalid ? 'is-invalid' : ''
+      "
     />
+    <div
+      class="invalid-feedback"
+      *ngIf="submitted && registerForm.get('mobile')!.invalid"
+    >
+      Mobile Number should not be empty
+    </div>
   </div>
   <div class="row mb-3">
     <div class="col">
@@ -57,7 +104,17 @@
         class="form-control"
         id="pwd"
         formControlName="pwd"
+        [ngClass]="
+          submitted && registerForm.get('pwd')!.invalid ? 'is-invalid' : ''
+        "
       />
+      <div
+        class="invalid-feedback"
+        *ngIf="submitted && registerForm.get('pwd')!.invalid"
+      >
+        Password must contain at least 1 capital letter, 1 small letter, 1
+        number, and 1 special character.
+      </div>
     </div>
     <div class="col">
       <label for="exampleInputPassword2" class="form-label"
@@ -68,15 +125,14 @@
         class="form-control"
         id="rpwd"
         formControlName="rpwd"
+        [ngClass]="
+          submitted && registerForm.get('pwd')!.invalid ? 'is-invalid' : ''
+        "
       />
     </div>
   </div>
   <div>
-    <button
-      type="submit"
-      class="d-block mx-auto btn btn-outline-primary"
-      [disabled]="registerForm.invalid"
-    >
+    <button type="submit" class="d-block mx-auto btn btn-outline-primary">
       Submit
     </button>
   </div>

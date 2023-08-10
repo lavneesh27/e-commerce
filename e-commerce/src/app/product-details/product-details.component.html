@@ -1,8 +1,8 @@
-<div class="my-container mx-auto border border-dark">
+<div class="my-container mx-auto border my-rounded-corner">
   <div class="row g-0">
     <!-- profile image of the product -->
     <div class="col-4 p-4">
-      <div>
+      <div class="image-container">
         <img
           src="../../assets/images/{{ product.productCategory.subCategory }}/{{
             product.id
@@ -21,6 +21,7 @@
             }}/{{ product.id }}/{{ imageNumber }}.jpg"
             alt="Thumbnail Image"
             (click)="imageIndex = imageNumber"
+            class="thumbnail-image"
           />
         </ng-container>
       </div>
@@ -78,9 +79,7 @@
   <!-- suggested products -->
   <div class="row g-0">
     <div class="col-12 ps-5 pt-4 pb-3">
-      <h3
-        class="border border-secondary text-center py-2 my-rounded-corner w-25"
-      >
+      <h3 class="border text-center py-2 my-rounded-corner w-25">
         Related Products
       </h3>
     </div>

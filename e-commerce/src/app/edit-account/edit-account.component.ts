@@ -36,7 +36,11 @@ export class EditAccountComponent implements OnInit {
     this.navigation.updateUser(this.user).subscribe((res) => {
       if (res) {
         this.message = 'User Updated Successfully';
-        this.utility.getUser();
+        this.navigation
+          .loginUser(this.user.email, this.user.password)
+          .subscribe((loginRes) => {
+            this.utility.setUser(loginRes.toString());
+          });
       } else {
         this.message = 'Some Error Occuured';
       }

@@ -15,6 +15,7 @@ import { NavigationService } from '../services/navigation.service';
 })
 export class RegisterComponent {
   registerForm!: FormGroup;
+  submitted: boolean = false;
   message = '';
   constructor(
     private fb: FormBuilder,
@@ -58,20 +59,23 @@ export class RegisterComponent {
     );
   }
   register() {
-    let user: User = {
-      id: 0,
-      firstName: this.FirstName.value,
-      lastName: this.LastName.value,
-      email: this.Email.value,
-      address: this.Address.value,
-      mobile: this.Mobile.value,
-      password: this.PWD.value,
-      createdAt: '',
-      modifiedAt: '',
-    };
-    this.navigationService.registerUser(user).subscribe((res: any) => {
-      this.message = res.toString();
-    });
+    this.submitted = true;
+    if (this.registerForm.valid) {
+      let user: User = {
+        id: 0,
+        firstName: this.FirstName.value,
+        lastName: this.LastName.value,
+        email: this.Email.value,
+        address: this.Address.value,
+        mobile: this.Mobile.value,
+        password: this.PWD.value,
+        createdAt: '',
+        modifiedAt: '',
+      };
+      this.navigationService.registerUser(user).subscribe((res: any) => {
+        this.message = res.toString();
+      });
+    }
   }
   passwordMatchValidator(formGroup: FormGroup) {
     const passwordControl = formGroup.get('pwd');

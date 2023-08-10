@@ -4,7 +4,16 @@
     *ngFor="let suggestedProduct of suggestedProducts"
   >
     <div class="product-baner position-relative">
-      <button type="button" class="btn btn-outline-light btn-lg">
+      <button
+        type="button"
+        class="btn btn-outline-light btn-lg"
+        OpenProducts
+        [category]="{
+          id: 0,
+          category: suggestedProduct.category.category,
+          subCategory: suggestedProduct.category.subCategory
+        }"
+      >
         Shop Now
       </button>
       <img

@@ -1,7 +1,10 @@
 <div class="grid-view" *ngIf="view === 'grid'">
-  <div class="card text-center">
+  <div class="card text-center my-shadow">
     <div
       class="overflow-hidden d-flex justify-content-center align-items-center"
+      OpenProdutsDetails
+      [productId]="product.id"
+      style="cursor: pointer"
     >
       <img
         src="../../assets/images/{{ product.productCategory.subCategory }}/{{
@@ -13,8 +16,15 @@
         [productId]="product.id"
       />
     </div>
-    <div class="card-body">
-      <h5 class="card-title title">{{ product.title }}</h5>
+    <div
+      class="card-body"
+      OpenProdutsDetails
+      [productId]="product.id"
+      style="cursor: pointer"
+    >
+      <h5 class="card-title title">
+        {{ product.title }}
+      </h5>
       <h6 class="card-subtitle my-2 text-primary">
         {{ product.quantity }} products are available.
       </h6>
@@ -51,7 +61,7 @@
 </div>
 
 <div class="list-view" *ngIf="view === 'list'">
-  <div class="card">
+  <div class="card my-shadow">
     <div class="row g-0">
       <div
         class="col-md-3 overflow-hidden d-flex justify-content-center align-items-center"
@@ -110,7 +120,7 @@
 </div>
 
 <div class="cart-item-view" *ngIf="view === 'currcartitem'">
-  <div class="card">
+  <div class="card my-shadow">
     <div class="row g-0">
       <div
         class="col-4 overflow-hidden d-flex justify-content-center align-items-center"
@@ -155,7 +165,7 @@
 </div>
 
 <div class="cart-item-view" *ngIf="view === 'prevcartitem'">
-  <div class="card text-center">
+  <div class="card text-center my-shadow">
     <div
       class="overflow-hidden d-flex justify-content-center align-items-center"
     >

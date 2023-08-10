@@ -2,8 +2,8 @@
   display: block;
   overflow: hidden;
   height: max-content;
-  border-radius: 1rem;
-  box-shadow: 0 0 0.75rem rgba(0, 0, 0, 0.3);
+  /* border-radius: 1rem; */
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
   transition: transform 200ms ease-in-out;
 }
 :host:hover {

@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   Type,
   ViewChild,
@@ -17,7 +18,7 @@ import { UtilityService } from '../services/utility.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('modalTitle') modalTitle!: ElementRef;
   @ViewChild('container', { read: ViewContainerRef, static: true })
   container!: ViewContainerRef;
@@ -27,6 +28,9 @@ export class HeaderComponent implements OnInit {
     private navigation: NavigationService,
     public utility: UtilityService
   ) {}
+  ngOnDestroy(): void {
+    this.utility.changeCart.unsubscribe();
+  }
   ngOnInit(): void {
     this.navigation.getCategoryList().subscribe((list: Category[]) => {
       for (let item of list) {

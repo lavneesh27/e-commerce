@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using WebApplication1.Models;
 
@@ -13,6 +14,8 @@ namespace WebApplication1.Controllers.DataAccess
         private readonly IConfiguration configuration;
         private readonly string dbconnection;
         private readonly string dateformat;
+
+
 
         public DataAccess(IConfiguration configuration)
         {
@@ -472,13 +475,14 @@ namespace WebApplication1.Controllers.DataAccess
             SqlCommand cmd = new SqlCommand("InsertUserProcedure", conn);
             cmd.CommandType = CommandType.StoredProcedure;
 
+            string hashedPassword = ComputeHash(user.Password);
 
             cmd.Parameters.Add("@firstName", SqlDbType.NVarChar).Value = user.FirstName;
             cmd.Parameters.Add("@lastName", SqlDbType.NVarChar).Value = user.LastName;
             cmd.Parameters.Add("@address", SqlDbType.NVarChar).Value = user.Address;
             cmd.Parameters.Add("@mobile", SqlDbType.NVarChar).Value = user.Mobile;
             cmd.Parameters.Add("@email", SqlDbType.NVarChar).Value = user.Email;
-            cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = user.Password;
+            cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = hashedPassword;
             cmd.Parameters.Add("@createdAt", SqlDbType.NVarChar).Value = user.CreatedAt;
             cmd.Parameters.Add("@modifiedAt", SqlDbType.NVarChar).Value = user.ModifiedAt;
 
@@ -495,6 +499,8 @@ namespace WebApplication1.Controllers.DataAccess
             SqlCommand cmd = new SqlCommand("UpdateUserProcedure", conn);
 
             cmd.CommandType = CommandType.StoredProcedure;
+
+            user.Password = ComputeHash(user.Password);
 
             cmd.Parameters.Add("@firstName", SqlDbType.NVarChar).Value = user.FirstName;
             cmd.Parameters.Add("@lastName", SqlDbType.NVarChar).Value = user.LastName;
@@ -519,7 +525,9 @@ namespace WebApplication1.Controllers.DataAccess
                 Connection = conn,
             };
             conn.Open();
-            string query = "SELECT COUNT(*) FROM Users WHERE Email='" + email + "' AND Password='" + password + "';";
+
+            string hashPassword = ComputeHash(password);
+            string query = "SELECT COUNT(*) FROM Users WHERE Email='" + email + "' AND Password='" + hashPassword + "';";
             command.CommandText = query;
             int count = (int)command.ExecuteScalar();
             if (count == 0)
@@ -528,7 +536,7 @@ namespace WebApplication1.Controllers.DataAccess
                 return "";
             }
 
-            query = "select * from Users where Email='" + email + "'and Password='" + password + "';";
+            query = "select * from Users where Email='" + email + "'and Password='" + hashPassword + "';";
             command.CommandText = query;
 
             SqlDataReader reader = command.ExecuteReader();
@@ -569,6 +577,22 @@ namespace WebApplication1.Controllers.DataAccess
                 signingCredentials: credentials
                 );
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
+        }
+
+        public static string ComputeHash(string input)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+                byte[] hashBytes = sha256.ComputeHash(inputBytes);
+
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    builder.Append(hashBytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
         }
 
 

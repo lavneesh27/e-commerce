@@ -25,6 +25,7 @@ export class UtilityService implements OnDestroy {
 
   getUser(): User {
     let token = this.jwt.decodeToken();
+
     let user: User = {
       id: token.id,
       firstName: token.firstName,
@@ -36,6 +37,8 @@ export class UtilityService implements OnDestroy {
       createdAt: token.createdAt,
       modifiedAt: token.modifiedAt,
     };
+
+    console.log(user);
 
     return user;
   }

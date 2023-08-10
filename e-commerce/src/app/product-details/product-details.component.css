@@ -8,3 +8,27 @@
 .image-thumbnails > img:hover {
   transform: scale(1.08);
 }
+
+.thumbnail-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  cursor: pointer;
+}
+.image-container {
+  min-height: 400px;
+  max-height: 500px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-container img {
+  object-fit: contain;
+  overflow: hidden;
+  width: 400px;
+  height: 400px;
+  max-width: 100%; /* Ensure image doesn't exceed container */
+  max-height: 100%;
+}

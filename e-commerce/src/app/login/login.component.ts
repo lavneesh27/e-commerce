@@ -16,6 +16,7 @@ import { UtilityService } from '../services/utility.service';
 export class LoginComponent {
   loginForm!: FormGroup;
   message = '';
+  submitted: boolean = false;
   constructor(
     private fb: FormBuilder,
     private navigationService: NavigationService,
@@ -28,13 +29,14 @@ export class LoginComponent {
         '',
         [
           Validators.required,
-          Validators.minLength(6),
-          Validators.maxLength(15),
+          Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$'),
         ],
       ],
     });
   }
   login() {
+    this.submitted = true;
+
     this.navigationService
       .loginUser(this.Email.value, this.PWD.value)
       .subscribe((res: any) => {
