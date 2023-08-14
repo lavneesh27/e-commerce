@@ -1,25 +1,27 @@
 <div class="container">
-  <table class="table table-bordered my-shadow">
-    <tbody>
-      <tr>
-        <td class="fw-bold">First Name</td>
-        <td>{{ user.firstName + " " + user.lastName }}</td>
-      </tr>
-      <tr>
-        <td class="fw-bold">Email</td>
-        <td>{{ user.email }}</td>
-      </tr>
-      <tr>
-        <td class="fw-bold">Address</td>
-        <td>{{ user.address }}</td>
-      </tr>
-      <tr>
-        <td class="fw-bold">Mobile Number</td>
-        <td>{{ user.mobile }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="text-center">
-    <button class="btn btn-secondary" routerLink="/edit-account">Edit</button>
+  <div class="table-container">
+    <table class="table table-bordered my-shadow">
+      <tbody>
+        <tr>
+          <td class="fw-bold">First Name</td>
+          <td>{{ user.firstName + " " + user.lastName }}</td>
+        </tr>
+        <tr>
+          <td class="fw-bold">Email</td>
+          <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+          <td class="fw-bold">Address</td>
+          <td>{{ user.address }}</td>
+        </tr>
+        <tr>
+          <td class="fw-bold">Mobile Number</td>
+          <td>{{ user.mobile }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center">
+      <button class="btn btn-dark" routerLink="/edit-account">Edit</button>
+    </div>
   </div>
 </div>

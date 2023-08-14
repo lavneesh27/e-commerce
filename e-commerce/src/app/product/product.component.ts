@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Cart, Product } from '../models/models';
 import { UtilityService } from '../services/utility.service';
 import { NavigationService } from '../services/navigation.service';
@@ -9,10 +9,10 @@ import { NavigationService } from '../services/navigation.service';
   styleUrls: ['./product.component.css'],
 })
 export class ProductComponent {
-  /**
-   *
-   */
-  constructor(public utilityService: UtilityService) {}
+  constructor(
+    public utilityService: UtilityService,
+    public navigation: NavigationService
+  ) {}
   @Input() view: 'grid' | 'list' | 'currcartitem' | 'prevcartitem' = 'grid';
   @Input() product: Product = {
     id: 0,

@@ -14,3 +14,6 @@ body {
 .modal-backdrop.fade.show {
   z-index: 19;
 }
+.btn {
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 5px 0px;
+}

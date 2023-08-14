@@ -16,6 +16,8 @@ namespace WebApplication1.Controllers.DataAccess
 
         Product GetProduct(int id);
 
+        bool UpdateProduct(int id);
+
         bool InsertUser(User user);
 
         bool UpdateUser(User user);

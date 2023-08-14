@@ -48,13 +48,14 @@
     </div>
     <div class="card-footer d-grid gap-2">
       <button
-        class="btn btn-outline-success"
+        class="btn btn-outline-dark"
         type="button"
-        [disabled]="!utilityService.isLoggedIn()"
+        [disabled]="!utilityService.isLoggedIn() || product.quantity === 0"
         (click)="this.utilityService.addToCart(product)"
       >
         Add to Cart
         <span *ngIf="!utilityService.isLoggedIn()">(Login First)</span>
+        <span *ngIf="product.quantity === 0">(Out of Stock)</span>
       </button>
     </div>
   </div>
@@ -77,7 +78,12 @@
         />
       </div>
       <div class="col d-flex flex-column mt-3">
-        <div class="card-body">
+        <div
+          class="card-body"
+          OpenProdutsDetails
+          [productId]="product.id"
+          style="cursor: pointer"
+        >
           <h5 class="card-title title">{{ product.title }}</h5>
           <p class="card-text description">
             {{ product.description }}
@@ -105,9 +111,9 @@
         </div>
         <div class="card-footer text-muted d-grid gap-2">
           <button
-            class="btn btn-outline-success"
+            class="btn btn-outline-dark"
             type="button"
-            [disabled]="!utilityService.isLoggedIn()"
+            [disabled]="!utilityService.isLoggedIn() || product.quantity === 0"
             (click)="this.utilityService.addToCart(product)"
           >
             Add to Cart
@@ -133,11 +139,19 @@
           alt="Product Image"
           OpenProdutsDetails
           [productId]="product.id"
+          style="cursor: pointer"
         />
       </div>
       <div class="col-8">
-        <div class="card-body">
-          <h5 class="card-title title">{{ product.title }}</h5>
+        <div
+          class="card-body"
+          OpenProdutsDetails
+          [productId]="product.id"
+          style="cursor: pointer"
+        >
+          <h5 class="card-title title">
+            {{ product.title }}
+          </h5>
           <h5 class="card-title text-success">
             {{
               utilityService.applyDiscount(
@@ -156,7 +170,7 @@
             type="button"
             (click)="utilityService.removeFromCart(product)"
           >
-            Remove From Cart
+            Remove
           </button>
         </div>
       </div>
@@ -165,7 +179,12 @@
 </div>
 
 <div class="cart-item-view" *ngIf="view === 'prevcartitem'">
-  <div class="card text-center my-shadow">
+  <div
+    class="card text-center my-shadow"
+    OpenProdutsDetails
+    [productId]="product.id"
+    style="cursor: pointer"
+  >
     <div
       class="overflow-hidden d-flex justify-content-center align-items-center"
     >
@@ -175,8 +194,6 @@
         }}/1.jpg"
         alt="card-img-top"
         class="card-img-top"
-        OpenProdutsDetails
-        [productId]="product.id"
       />
     </div>
     <div class="card-body">

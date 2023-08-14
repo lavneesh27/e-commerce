@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import {
   FormBuilder,
   FormControl,
@@ -16,10 +17,10 @@ import { NavigationService } from '../services/navigation.service';
 export class RegisterComponent {
   registerForm!: FormGroup;
   submitted: boolean = false;
-  message = '';
   constructor(
     private fb: FormBuilder,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -73,7 +74,7 @@ export class RegisterComponent {
         modifiedAt: '',
       };
       this.navigationService.registerUser(user).subscribe((res: any) => {
-        this.message = res.toString();
+        this.toastr.success('Registration Successful!');
       });
     }
   }

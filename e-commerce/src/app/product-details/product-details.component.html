@@ -40,7 +40,9 @@
                 product.offer.discount
               ) | currency : "INR"
             }}
-            <span class="text-primary"> -{{ product.offer.discount }}%</span>
+            <span class="text-primary fs-5">
+              -{{ product.offer.discount }}%</span
+            >
           </h1>
           <h4 class="card-subtitle text-danger text-decoration-line-through">
             {{ product.price | currency : "INR" }}
@@ -53,12 +55,15 @@
           <div class="d-grid gap-2">
             <button
               type="button"
-              class="btn btn-outline-success"
-              [disabled]="!utilityService.isLoggedIn()"
+              class="btn btn-outline-dark"
+              [disabled]="
+                !utilityService.isLoggedIn() || product.quantity === 0
+              "
               (click)="this.utilityService.addToCart(product)"
             >
               Add to Cart
               <span *ngIf="!utilityService.isLoggedIn()">(Login First)</span>
+              <span *ngIf="product.quantity === 0">(Out of Stock)</span>
             </button>
           </div>
         </div>
@@ -104,7 +109,7 @@
       </div>
       <div class="d-flex align-items-start">
         <button
-          class="btn btn-outline-secondary mt-4 me-5"
+          class="btn btn-outline-dark mt-4 me-5"
           type="button"
           (click)="submitReview()"
         >

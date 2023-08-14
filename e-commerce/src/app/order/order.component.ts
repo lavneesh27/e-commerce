@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { UtilityService } from '../services/utility.service';
 import { NavigationService } from '../services/navigation.service';
-import { Cart, Order, Payment } from '../models/models';
+import { Cart, Order, Payment, Product } from '../models/models';
 import { timer } from 'rxjs';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 declare var Razorpay: any;
 
@@ -41,7 +42,8 @@ export class OrderComponent implements OnInit {
   constructor(
     public utilityService: UtilityService,
     private navigationService: NavigationService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
   ngOnInit(): void {
     this.selectedPaymentMethod.valueChanges.subscribe((res: any) => {
@@ -94,9 +96,17 @@ export class OrderComponent implements OnInit {
     };
 
     const successCallback = (paymentid: any) => {
-      console.log(paymentid);
+      this.usersCart.cartItems.forEach((item: any) => {
+        this.navigationService
+          .updateProduct(item.product.id)
+          .subscribe((res) => {
+            console.log(res);
+          });
+      });
       this.message = 'Your Order has been placed';
+      this.toastr.success('Your Order has been placed !');
       this.storeOrder();
+
       setTimeout(() => {
         this.router.navigateByUrl('/home');
       }, 1000);
@@ -105,6 +115,13 @@ export class OrderComponent implements OnInit {
     const failureCallback = (e: any) => {
       console.log(e);
       console.log('error occured');
+    };
+
+    const updateItems = () => {
+      this.usersCart.cartItems.forEach((element) => {
+        element.product.quantity--;
+        console.log(element.product.quantity);
+      });
     };
 
     Razorpay.open(RazorpayOptions, successCallback, failureCallback);

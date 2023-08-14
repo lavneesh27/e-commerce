@@ -181,7 +181,29 @@ namespace WebApplication1.Controllers.DataAccess
                 product.Offer = GetOffer(offerId);
             }
             return product;
+        }
 
+        public bool UpdateProduct(int id)
+        {
+            using SqlConnection conn = new(dbconnection);
+            SqlCommand cmd = new()
+            {
+                Connection = conn,
+            };
+            conn.Open();
+
+            string query = "update Products set Quantity=Quantity-1 where ProductId=" + id + ";";
+            cmd.CommandText = query;
+            int rowsAffected = cmd.ExecuteNonQuery();
+
+            if (rowsAffected > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public List<ProductCategory> GetProductCategories()

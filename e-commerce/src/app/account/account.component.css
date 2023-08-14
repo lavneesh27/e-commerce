@@ -1,0 +1,7 @@
+.table-container {
+  display: flex;
+  flex-direction: column;
+  height: 75vh;
+  align-items: center;
+  justify-content: center;
+}

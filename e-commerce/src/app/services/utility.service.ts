@@ -7,6 +7,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Cart, Payment, Product, User } from '../models/models';
 import { Subject } from 'rxjs';
 import { NavigationService } from './navigation.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,8 @@ export class UtilityService implements OnDestroy {
 
   constructor(
     private jwt: JwtHelperService,
-    private navigation: NavigationService
+    private navigation: NavigationService,
+    private toastr: ToastrService
   ) {}
   applyDiscount(price: number, discount: number): number {
     let finalPrice: number = price - price * (discount / 100);
@@ -38,8 +40,6 @@ export class UtilityService implements OnDestroy {
       modifiedAt: token.modifiedAt,
     };
 
-    console.log(user);
-
     return user;
   }
   setUser(token: string) {
@@ -49,6 +49,7 @@ export class UtilityService implements OnDestroy {
     return localStorage.getItem('user') ? true : false;
   }
   logoutUser() {
+    this.toastr.success('Logout Successful');
     localStorage.removeItem('user');
   }
 
@@ -57,7 +58,10 @@ export class UtilityService implements OnDestroy {
     let userId = this.getUser().id;
 
     this.navigation.addToCart(userId, productId).subscribe((res) => {
-      if (res.toString() === 'inserted') this.changeCart.next(1);
+      if (res.toString() === 'inserted') {
+        this.toastr.success('Item Added to Cart!');
+        this.changeCart.next(1);
+      }
     });
   }
   removeFromCart(product: Product) {
@@ -68,6 +72,9 @@ export class UtilityService implements OnDestroy {
       if (res.toString() === 'removed') {
         this.changeCart.next(-1);
         window.location.reload();
+        // setTimeout(() => {
+        //   this.toastr.warning('Item Removed from Cart!');
+        // }, 1000);
         this.navigation.getActiveCartOfUser(userId);
       }
     });

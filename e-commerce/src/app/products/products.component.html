@@ -6,19 +6,19 @@
     <div class="btn-group" role="group">
       <button
         type="button"
-        class="btn btn-outline-secondary"
+        class="btn btn-outline-dark"
         [class.active]="view === 'grid'"
         (click)="view = 'grid'"
       >
-        Grid
+        <i class="bx bxs-grid-alt fs-5"></i>
       </button>
       <button
         type="button"
-        class="btn btn-outline-secondary"
+        class="btn btn-outline-dark"
         [class.active]="view === 'list'"
         (click)="view = 'list'"
       >
-        List
+        <i class="bx bx-list-ul fs-5"></i>
       </button>
     </div>
     <div class="d-flex align-items-center justify-content-center w-50">
@@ -33,7 +33,7 @@
     <div class="btn-group" role="group">
       <button
         type="button"
-        class="btn btn-outline-secondary"
+        class="btn btn-outline-dark"
         [class.active]="sortBy === 'default'"
         (click)="sortBy = 'default'; sortByPrice(sortBy)"
       >
@@ -41,19 +41,21 @@
       </button>
       <button
         type="button"
-        class="btn btn-outline-secondary"
+        class="btn btn-outline-dark"
         [class.active]="sortBy === 'htl'"
         (click)="sortBy = 'htl'; sortByPrice(sortBy)"
       >
-        Price(High to Low)
+        <span><i class="bx bx-down-arrow-alt fs-5"></i></span>
+        Price (High to Low)
       </button>
       <button
         type="button"
-        class="btn btn-outline-secondary"
+        class="btn btn-outline-dark"
         [class.active]="sortBy === 'lth'"
         (click)="sortBy = 'lth'; sortByPrice(sortBy)"
       >
-        Price(Low to High)
+        <span><i class="bx bx-up-arrow-alt fs-5"></i></span>
+        Price (Low to High)
       </button>
     </div>
   </div>

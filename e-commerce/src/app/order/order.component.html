@@ -1,6 +1,9 @@
-<div *ngIf="usersCart.cartItems.length === 0" class="fw-bold text-center mt-3">
-  Please add some items in cart
+<div *ngIf="usersCart.cartItems.length === 0" class="empty-cart">
+  <i class="bx bxs-cart-add fs-1"></i>
+  <p class="fw-bold text-center mt-3">Your cart is empty.</p>
+  <p class="text-center">Please add some items to your cart.</p>
 </div>
+
 <div *ngIf="usersCart.cartItems.length !== 0" class="my-container mx-auto">
   <section class="m-3 p-4 border my-rounded-corner">
     <h4 class="w-25 border text-center py-2 my-rounded-corner">Patment Info</h4>
@@ -37,7 +40,7 @@
       </tbody>
     </table>
     <div class="text-center">
-      <button class="btn btn-secondary" routerLink="/cart">Go to Cart</button>
+      <button class="btn btn-dark" routerLink="/cart">Go to Cart</button>
     </div>
   </section>
 
@@ -45,7 +48,7 @@
     <h4 class="w-25 border border text-center py-2 my-rounded-corner">
       Proceed to Payments
     </h4>
-    <div class="mt-4 w-50">
+    <div class="mt-4 w-50 mx-auto">
       <table class="table table-bordered my-shadow">
         <thead>
           <tr>
@@ -76,24 +79,17 @@
         </thead>
       </table>
 
-      <div class="d-flex w-50">
+      <div class="d-flex justify-content-center">
         <button
           type="button"
-          class="btn btn-success mb-4 col-5"
+          class="btn btn-warning mb-4 col-5"
           (click)="placeOrder()"
         >
           Check Out
         </button>
-        <button class="btn btn-secondary mb-4 ms-2" routerLink="/edit-account">
+        <button class="btn btn-dark mb-4 ms-2" routerLink="/edit-account">
           Edit
         </button>
-      </div>
-
-      <div class="processing">
-        <div class="spinner-border me-4" role="status" *ngIf="displaySpinner">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-        <h6 class="m-0 text-danger">{{ message }}</h6>
       </div>
     </div>
   </section>

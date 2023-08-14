@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UtilityService } from '../services/utility.service';
 import { User } from '../models/models';
 import { NavigationService } from '../services/navigation.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-account',
@@ -11,13 +12,12 @@ import { NavigationService } from '../services/navigation.service';
 export class EditAccountComponent implements OnInit {
   constructor(
     public utility: UtilityService,
-    public navigation: NavigationService
+    public navigation: NavigationService,
+    private toastr: ToastrService
   ) {}
   ngOnInit() {
     this.user = this.utility.getUser();
   }
-
-  message: string = '';
 
   user: User = {
     id: 0,
@@ -31,18 +31,16 @@ export class EditAccountComponent implements OnInit {
     modifiedAt: '',
   };
   updateUser(): void {
-    console.log(this.user);
-
     this.navigation.updateUser(this.user).subscribe((res) => {
       if (res) {
-        this.message = 'User Updated Successfully';
         this.navigation
           .loginUser(this.user.email, this.user.password)
           .subscribe((loginRes) => {
             this.utility.setUser(loginRes.toString());
+            this.toastr.success('User Updated!');
           });
       } else {
-        this.message = 'Some Error Occuured';
+        this.toastr.warning('Some Error Occuured!');
       }
     });
   }

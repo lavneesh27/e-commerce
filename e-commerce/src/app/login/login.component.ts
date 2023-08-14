@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import {
   FormBuilder,
   FormControl,
@@ -15,12 +16,12 @@ import { UtilityService } from '../services/utility.service';
 })
 export class LoginComponent {
   loginForm!: FormGroup;
-  message = '';
   submitted: boolean = false;
   constructor(
     private fb: FormBuilder,
     private navigationService: NavigationService,
-    private utilityService: UtilityService
+    private utilityService: UtilityService,
+    private toastr: ToastrService
   ) {}
   ngOnInit() {
     this.loginForm = this.fb.group({
@@ -41,10 +42,10 @@ export class LoginComponent {
       .loginUser(this.Email.value, this.PWD.value)
       .subscribe((res: any) => {
         if (res.toString() !== 'invalid') {
-          this.message = 'Logged In Successfully.';
           this.utilityService.setUser(res.toString());
+          this.toastr.success('Login Successful!');
         } else {
-          this.message = 'Invalid Credentials!';
+          this.toastr.warning('Invalid Credentials!');
         }
       });
   }

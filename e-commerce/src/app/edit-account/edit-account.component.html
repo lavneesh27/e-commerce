@@ -94,11 +94,13 @@
         <div *ngIf="password.errors?.['required']">Password is required.</div>
       </div>
     </div>
-
-    <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">
-      Update
-    </button>
-    <button class="btn btn-danger ms-3" routerLink="/account">Cancel</button>
+    <div class="container d-flex justify-content-center">
+      <button type="submit" class="btn btn-dark" [disabled]="userForm.invalid">
+        Update
+      </button>
+      <button class="btn btn-outline-dark ms-3" routerLink="/account">
+        Cancel
+      </button>
+    </div>
   </form>
-  <div class="text-success mt-3">{{ message }}</div>
 </div>

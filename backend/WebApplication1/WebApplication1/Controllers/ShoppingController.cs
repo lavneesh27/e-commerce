@@ -37,6 +37,14 @@ namespace WebApplication1.Controllers
             var result = dataAccess.GetProduct(id);
             return Ok(result);
         }
+
+        [HttpPost("UpdateProduct/{id}")]
+        public IActionResult UpdateProduct(int id)
+        {
+            var result = dataAccess.UpdateProduct(id);
+            return Ok(result);
+        }
+
         [HttpPost("RegisterUser")]
         public IActionResult RegisterUser([FromBody] User user)
         {
