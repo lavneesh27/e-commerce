@@ -1,5 +1,5 @@
-<app-header></app-header>
-<main class="container">
+<app-header [class]="this.utility.isDark ? 'dark' : ''"></app-header>
+<main [class]="this.utility.isDark ? 'dark container' : 'container'">
   <router-outlet></router-outlet>
 </main>
-<app-footer></app-footer>
+<app-footer [class]="this.utility.isDark ? 'dark' : ''"></app-footer>

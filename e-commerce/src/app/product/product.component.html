@@ -54,8 +54,8 @@
         (click)="this.utilityService.addToCart(product)"
       >
         Add to Cart
-        <span *ngIf="!utilityService.isLoggedIn()">(Login First)</span>
-        <span *ngIf="product.quantity === 0">(Out of Stock)</span>
+        <span *ngIf="!utilityService.isLoggedIn()"> (Login First)</span>
+        <span *ngIf="product.quantity === 0"> (Out of Stock)</span>
       </button>
     </div>
   </div>

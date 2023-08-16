@@ -79,4 +79,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.container.createComponent(componentType);
   }
+  Toggle() {
+    this.utility.toggleTheme();
+    console.log(this.utility.isDark);
+  }
 }

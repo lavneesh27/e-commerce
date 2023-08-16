@@ -1,9 +1,9 @@
 <div class="my-container mx-auto">
   <!-- Toolbar -->
   <div
-    class="border my-rounded-corner mb-5 p-3 d-flex justify-content-between align-items-center"
+    class="border my-rounded-corner mb-5 p-3 d-flex flex-column flex-md-row justify-content-between align-items-center"
   >
-    <div class="btn-group" role="group">
+    <div class="btn-group mb-3 mb-md-0" role="group">
       <button
         type="button"
         class="btn btn-outline-dark"
@@ -21,7 +21,9 @@
         <i class="bx bx-list-ul fs-5"></i>
       </button>
     </div>
-    <div class="d-flex align-items-center justify-content-center w-50">
+    <div
+      class="d-flex align-items-center justify-content-center w-md-50 mb-3 mb-md-0"
+    >
       <input
         class="form-control"
         placeholder="Search for products"
@@ -30,7 +32,7 @@
         (ngModelChange)="find()"
       />
     </div>
-    <div class="btn-group" role="group">
+    <div class="btn-group mb-3 mb-md-0" role="group">
       <button
         type="button"
         class="btn btn-outline-dark"

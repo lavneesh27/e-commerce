@@ -17,3 +17,15 @@ body {
 .btn {
   box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 5px 0px;
 }
+
+.dark,
+.dark * {
+  background-color: #212529;
+  color: #fbfbfb;
+  border-color: #fbfbfb;
+  outline-color: #fbfbfb;
+}
+.dark btn:hover {
+  background-color: #fbfbfb;
+  color: black;
+}

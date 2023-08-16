@@ -14,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class UtilityService implements OnDestroy {
   changeCart = new Subject();
+  isDark = false;
 
   constructor(
     private jwt: JwtHelperService,
@@ -115,6 +116,15 @@ export class UtilityService implements OnDestroy {
       );
     }
     return pricepaid;
+  }
+
+  toggleTheme() {
+    this.isDark = !this.isDark;
+    if (this.isDark) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
   }
   ngOnDestroy() {
     this.changeCart.unsubscribe();

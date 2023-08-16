@@ -45,33 +45,32 @@
   </section>
 
   <section class="m-3 p-4 border my-rounded-corner">
-    <h4 class="w-25 border border text-center py-2 my-rounded-corner">
+    <h4 class="w-25 border text-center py-2 my-rounded-corner">
       Proceed to Payments
     </h4>
-    <div class="mt-4 w-50 mx-auto">
+    <div class="mt-4 mx-auto" style="max-width: 600px">
       <table class="table table-bordered my-shadow">
         <thead>
           <tr>
-            <td>You have to Pay</td>
-            <td>
-              <span style="font-weight: bold; color: green">{{
-                usersPaymentInfo.amountPaid | currency : "INR"
-              }}</span>
-            </td>
+            <th scope="col">You have to Pay</th>
+            <th scope="col">
+              <span class="font-weight-bold text-success">
+                {{ usersPaymentInfo.amountPaid | currency : "INR" }}
+              </span>
+            </th>
           </tr>
-
           <tr>
-            <td>Address</td>
+            <th scope="col">Address</th>
             <td *ngIf="true">
               {{ address }}
             </td>
             <td *ngIf="!true">
-              You have not entered address.
+              You have not entered an address.
               <a routerLink="/account-settings">Please Enter that.</a>
             </td>
           </tr>
           <tr>
-            <td>Mobile Number</td>
+            <th scope="col">Mobile Number</th>
             <td *ngIf="true">
               {{ mobileNumber }}
             </td>
@@ -79,15 +78,18 @@
         </thead>
       </table>
 
-      <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-center flex-wrap">
         <button
           type="button"
-          class="btn btn-warning mb-4 col-5"
+          class="btn btn-warning mb-2 col-12 col-md-5 me-md-2"
           (click)="placeOrder()"
         >
           Check Out
         </button>
-        <button class="btn btn-dark mb-4 ms-2" routerLink="/edit-account">
+        <button
+          class="btn btn-dark mb-2 col-12 col-md-5 ms-md-2"
+          routerLink="/edit-account"
+        >
           Edit
         </button>
       </div>

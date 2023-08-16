@@ -7,3 +7,12 @@
   left: 0%;
   z-index: 20;
 }
+.toggle {
+  border: none;
+  background-color: transparent !important;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0 20px;
+}
