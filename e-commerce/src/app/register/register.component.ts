@@ -17,6 +17,7 @@ import { NavigationService } from '../services/navigation.service';
 export class RegisterComponent {
   registerForm!: FormGroup;
   submitted: boolean = false;
+  isVerified:boolean=false;
   constructor(
     private fb: FormBuilder,
     private navigationService: NavigationService,
@@ -53,10 +54,12 @@ export class RegisterComponent {
           ],
         ],
         rpwd: ['', Validators.required],
+        otp:['', Validators.required,Validators.minLength(6)]
       },
       {
         validators: this.passwordMatchValidator,
-      }
+      },
+      
     );
   }
   register() {
@@ -77,6 +80,7 @@ export class RegisterComponent {
         this.toastr.success('Registration Successful!');
       });
     }
+    this.isVerified=false;
   }
   passwordMatchValidator(formGroup: FormGroup) {
     const passwordControl = formGroup.get('pwd');
@@ -88,6 +92,31 @@ export class RegisterComponent {
       repeatPasswordControl?.setErrors(null);
     }
   }
+  getOtp(){
+    const email = this.registerForm.get('email')?.value.toString();
+    this.navigationService.getOTP(email).subscribe({
+      next: (res: any) => {
+        console.log(res); 
+      },  
+      error: (err) => {
+        console.error(err); 
+      },
+    });
+  }
+
+  verifyOtp(){
+    const otp = this.registerForm.get('otp')?.value.toString();
+    this.navigationService.verifyOTP(otp).subscribe({
+      next: (res: any) => {
+        console.log(res); 
+        this.isVerified=true;
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
+
   get FirstName(): FormControl {
     return this.registerForm.get('firstName') as FormControl;
   }

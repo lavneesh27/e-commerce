@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Category, Order, Payment, Product, User } from '../models/models';
 import { map } from 'rxjs/operators';
 
@@ -10,10 +10,14 @@ export class NavigationService {
   baseUrl = 'https://localhost:7167/api/Shopping/';
 
   constructor(private http: HttpClient) {}
-
+  
+  headers = new HttpHeaders({
+    'Content-Type': 'text/plain'
+  });
   getCategoryList() {
     let url = this.baseUrl + 'GetCategoryList';
 
+    
     return this.http.get<any[]>(url).pipe(
       map((categories) =>
         categories.map((category) => {
@@ -27,6 +31,9 @@ export class NavigationService {
       )
     );
   }
+
+
+
 
   getProducts(category: string, subCategory: string, count: number) {
     return this.http.get<any[]>(this.baseUrl + 'GetProducts', {
@@ -111,5 +118,14 @@ export class NavigationService {
   }
   insertOrder(order: Order) {
     return this.http.post(this.baseUrl + 'InsertOrder', order);
+  }
+
+  getOTP(reciever: string) {
+    // Send a POST request to the API
+    return this.http.post(this.baseUrl + 'GetOTP',{reciever:reciever});
+  }
+
+  verifyOTP(otp:string){
+    return this.http.get(this.baseUrl+'VerifyOTP');
   }
 }
