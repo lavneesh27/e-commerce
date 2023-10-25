@@ -163,14 +163,24 @@ namespace WebApplication1.Controllers
             var message = "Your email verification OTP is: ";
 
             await emailSender.SendEmailAsync(emailRequest.Reciever, subject, message);
-            
+
             return Ok(true);    
         }
 
-        [HttpGet("VerifyOTP")]
-        public Boolean VerifyOTP([FromBody]OtpRequest otpRequest)
+        [HttpPost("VerifyOTP")]
+        public async Task<ActionResult> VerifyOTP([FromBody]OtpRequest otpRequest)
         {
-            return emailSender.VerifyOTP(otpRequest.Value);
+            var res =  emailSender.VerifyOTP(otpRequest.Value);
+
+            if (res == true)
+            {
+                var reponse = dataAccess.VerifyUser(otpRequest.Email);
+                if (reponse == true)
+                {
+                    return Ok(true);
+                }
+            }
+            return NotFound(false);
         }
 
     }

@@ -37,6 +37,7 @@ export interface User {
   email: string;
   address: string;
   mobile: string;
+  isVerified:boolean,
   password: string;
   createdAt: string;
   modifiedAt: string;

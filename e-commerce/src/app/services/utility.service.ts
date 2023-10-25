@@ -36,6 +36,7 @@ export class UtilityService implements OnDestroy {
       address: token.address,
       mobile: token.mobile,
       email: token.email,
+      isVerified:token.isVerified,
       password: token.password,
       createdAt: token.createdAt,
       modifiedAt: token.modifiedAt,

@@ -355,6 +355,22 @@ namespace WebApplication1.Controllers.DataAccess
 
         }
 
+        public bool VerifyUser(string email)
+        {
+            using SqlConnection conn = new SqlConnection(dbconnection);
+            conn.Open();
+
+            string query = "UPDATE Users SET IsVerified = 1 WHERE Email = @Email";
+
+            using SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@Email", email);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+
+            return rowsAffected > 0;
+        }
+
+
         public bool InsertCartItem(int userId, int productId)
         {
             using SqlConnection conn = new(dbconnection);
@@ -569,6 +585,7 @@ namespace WebApplication1.Controllers.DataAccess
                 user.LastName = (string)reader["LastName"];
                 user.Email = (string)reader["Email"];
                 user.Address = (string)reader["Address"];
+                user.IsVerified = (bool)reader["IsVerified"];
                 user.Mobile = (string)reader["Mobile"];
                 user.Password = (string)reader["Password"];
                 user.CreatedAt = (string)reader["CreatedAt"];
@@ -585,6 +602,7 @@ namespace WebApplication1.Controllers.DataAccess
                 new Claim("lastName", user.LastName.ToString()),
                 new Claim("address", user.Address),
                 new Claim("mobile", user.Mobile),
+                new Claim("isVerified", user.IsVerified.ToString()),
                 new Claim("email", user.Email),
                 new Claim("createdAt", user.CreatedAt),
                 new Claim("modifiedAt", user.ModifiedAt),

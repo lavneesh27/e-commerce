@@ -1,4 +1,4 @@
-<form [formGroup]="registerForm" (ngSubmit)="getOtp()">
+<form [formGroup]="registerForm" (ngSubmit)="register()">
   <div class="row mb-3">
     <div class="col">
       <label for="exampleInputEmail1" class="form-label">First Name</label>
@@ -131,30 +131,15 @@
       />
     </div>
   </div>
-  <div class="col">
-    <label for="exampleInputPassword2" class="form-label"
-      >Enter OTP</label
-    >
-    <input
-      type="text"
-      class="form-control"
-      id="otp"
-      formControlName="otp"
-      [ngClass]="
-        submitted && registerForm.get('otp')!.invalid ? 'is-invalid' : ''
-      "
-    />
-  </div>
-  <div class="text-center">
-    <button type="submit" [disabled]="!isVerified" class=" mx-auto btn btn-outline-primary">
-      Submit
-    </button>
-    <button [disabled]="registerForm.get('email')!.invalid" (click)="getOtp()" class="mx-auto btn btn-outline-primary">
-      Get Otp
-    </button>
-    <button [disabled]="registerForm.get('otp')!.invalid" (click)="getOtp()" class="mx-auto btn btn-outline-primary">
-      Verify
-    </button>
+  <div class="text-center mt-3">
+    <button type="submit"
+        [routerLink]="['/verify']"
+        [queryParams]="{ email: registerForm.get('email')?.value }"
+        [disabled]="!registerForm.valid"
+        class="mx-auto btn btn-outline-primary">
+  Register
+</button>
+
   </div>
   
 </form>

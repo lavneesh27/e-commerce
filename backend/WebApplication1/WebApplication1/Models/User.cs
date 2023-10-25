@@ -10,6 +10,7 @@
         public string Mobile { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string CreatedAt { get; set; } = string.Empty;
+        public bool IsVerified { get; set; }
         public string ModifiedAt { get; set; } = string.Empty;
 
 

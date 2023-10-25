@@ -125,7 +125,7 @@ export class NavigationService {
     return this.http.post(this.baseUrl + 'GetOTP',{reciever:reciever});
   }
 
-  verifyOTP(otp:string){
-    return this.http.get(this.baseUrl+'VerifyOTP');
+  verifyOTP(otp:string, email:string){
+    return this.http.post(this.baseUrl+'VerifyOTP',{value:otp,email:email});
   }
 }

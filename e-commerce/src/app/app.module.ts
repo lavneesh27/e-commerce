@@ -27,6 +27,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ToastrModule } from 'ngx-toastr';
+import { VerifyComponent } from './verify/verify.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { ToastrModule } from 'ngx-toastr';
     RegisterComponent,
     AccountComponent,
     EditAccountComponent,
+    VerifyComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,19 @@
+<div class="container w-50">
+    <form [formGroup]="verifyForm" (ngSubmit)="verify()">
+        <div class="mb-3">
+            <label for="otp" class="form-label">Please enter OTP to verify your email</label>
+            <h6 class="text-danger fst-italic fw-light">An OTP is sent to your email</h6>
+            <input type="text" class="form-control" id="otp" formControlName="otp" />
+        </div>
+    
+        <div class="d-flex justify-content-between w-100">
+            <button type="submit" class="d-block mx-auto btn btn-primary">
+                Verify
+            </button>
+            <button class="d-block mx-auto btn btn-outline-primary" (click)="resend()">
+                Resend
+            </button>
+        </div>
+       
+    </form>
+</div>

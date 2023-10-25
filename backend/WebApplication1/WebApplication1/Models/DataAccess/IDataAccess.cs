@@ -22,6 +22,8 @@ namespace WebApplication1.Controllers.DataAccess
 
         bool UpdateUser(User user);
 
+        bool VerifyUser(string email);
+
         string IsUserPresent(string email, string password);
 
         void InsertReview(Review review);

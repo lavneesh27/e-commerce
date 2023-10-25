@@ -27,6 +27,7 @@ export class EditAccountComponent implements OnInit {
     address: '',
     mobile: '',
     password: '',
+    isVerified:false,
     createdAt: '',
     modifiedAt: '',
   };

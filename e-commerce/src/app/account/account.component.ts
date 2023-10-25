@@ -20,6 +20,7 @@ export class AccountComponent implements OnInit {
     email: '',
     address: '',
     mobile: '',
+    isVerified:false,
     password: '',
     createdAt: '',
     modifiedAt: '',

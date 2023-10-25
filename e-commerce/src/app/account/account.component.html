@@ -8,7 +8,16 @@
         </tr>
         <tr>
           <td class="fw-bold">Email</td>
-          <td>{{ user.email }}</td>
+          <td>
+            {{ user.email }} &nbsp;&nbsp;
+            <span [ngClass]="user.isVerified==true?'text-success':'text-danger'">
+              {{user.isVerified==true?'verified':'not-verified'}} 
+              
+              <i [class]="user.isVerified==true?'bx bx-user-check fs-5':'bx bx-error-circle'"></i>
+            </span>
+            &nbsp;
+            <span routerLink="/verify" [queryParams]="{ email: user.email }" *ngIf="!user.isVerified==false"><a href="">verify</a></span>
+          </td>
         </tr>
         <tr>
           <td class="fw-bold">Address</td>
