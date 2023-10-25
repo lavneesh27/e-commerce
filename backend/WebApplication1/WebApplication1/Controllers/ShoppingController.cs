@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Net.Mail;
 using WebApplication1.Controllers.DataAccess;
 using WebApplication1.Models;
+using WebApplication1.Models.EmailSender;
 
 namespace WebApplication1.Controllers
 {
@@ -10,11 +13,14 @@ namespace WebApplication1.Controllers
     {
         readonly IDataAccess dataAccess;
         private readonly string DateFormat;
+        private readonly IEmailSender emailSender;  
 
-        public ShoppingController(IDataAccess dataAccess, IConfiguration configuration)
+
+        public ShoppingController(IDataAccess dataAccess, IConfiguration configuration, IEmailSender emailSender)
         {
             this.dataAccess = dataAccess;
             DateFormat = configuration["Constants:DateFormat"];
+            this.emailSender = emailSender;
         }
 
         [HttpGet("GetCategoryList")]
@@ -148,5 +154,24 @@ namespace WebApplication1.Controllers
             var id = dataAccess.InsertOrder(order);
             return Ok(id.ToString());
         }
+
+        [HttpPost("GetOTP")]
+        public async Task<ActionResult> GetOTP([FromBody]EmailRequest emailRequest)
+        {
+
+            string subject = "Email Verification";
+            var message = "Your email verification OTP is: ";
+
+            await emailSender.SendEmailAsync(emailRequest.Reciever, subject, message);
+            
+            return Ok(true);    
+        }
+
+        [HttpGet("VerifyOTP")]
+        public Boolean VerifyOTP([FromBody]OtpRequest otpRequest)
+        {
+            return emailSender.VerifyOTP(otpRequest.Value);
+        }
+
     }
 }
