@@ -11,6 +11,8 @@ export class AccountComponent implements OnInit {
   constructor(public utility: UtilityService) {}
   ngOnInit() {
     this.user = this.utility.getUser();
+
+    console.log(this.user.isVerified);
   }
 
   user: User = {
@@ -20,7 +22,7 @@ export class AccountComponent implements OnInit {
     email: '',
     address: '',
     mobile: '',
-    isVerified:false,
+    isVerified: false,
     password: '',
     createdAt: '',
     modifiedAt: '',
